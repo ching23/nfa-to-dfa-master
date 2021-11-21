@@ -158,7 +158,7 @@ public class NfaToDfa {
 			String DFAStates = "";
 			for(int i = 0 ; i < allStates.size(); i++) {
 				ArrayList<String> stateInAllStates = allStates.get(i);
-				DFAStates += printStat(stateInAllStates);
+				DFAStates += printAllStates(stateInAllStates);
 				if(i<allStates.size()-1) {
 					// separate each state with a comma
 					DFAStates += ",";
@@ -173,7 +173,7 @@ public class NfaToDfa {
 			for(int i = 0 ; i < allStates.size();i++) {
 				ArrayList<String> stateInAllStates = allStates.get(i);
 				if(checkIfAccept(finalState, stateInAllStates)) {
-					DFAfinalState += printStat(stateInAllStates);
+					DFAfinalState += printAllStates(stateInAllStates);
 					if(i<allStates.size()-1) {
 						DFAfinalState += ",";
 					}
@@ -186,15 +186,15 @@ public class NfaToDfa {
 			System.out.println("DFA Alphabet: " + line2);
 			
 			// print the initial states
-			String DFAInitState = printStat(initialDFA);
+			String DFAInitState = printAllStates(initialDFA);
 			System.out.println("DFA Start State: " + DFAInitState);
 			
 			// print all transitions (DFA and NFA)
 			String DFATransitions = "";
 			for(int i = 0 ; i<NFATransitions.size();i++) {
-				DFATransitions +=printStat(NFATransitions.get(i).fromAlphabet);
+				DFATransitions +=printAllStates(NFATransitions.get(i).fromAlphabet);
 				DFATransitions +=",";
-				DFATransitions +=printStat(NFATransitions.get(i).toAlphabet);
+				DFATransitions +=printAllStates(NFATransitions.get(i).toAlphabet);
 				DFATransitions +=",";
 				DFATransitions +=NFATransitions.get(i).alphabet;
 				if(i < NFATransitions.size() - 1) {
@@ -414,10 +414,10 @@ public class NfaToDfa {
 	}
 
 	//check if the states is in the array if not adds
-	public static void checkAndAdd(ArrayList<String> result, ArrayList<String> arrayToBeAdded) {
-		for(int i = 0; i<arrayToBeAdded.size();i++) {
-			if(!result.contains(arrayToBeAdded.get(i))) {
-					result.add(arrayToBeAdded.get(i));
+	public static void checkAndAdd(ArrayList<String> result, ArrayList<String> addArray) {
+		for(int i = 0; i<addArray.size();i++) {
+			if(!result.contains(addArray.get(i))) {
+					result.add(addArray.get(i));
 			}
 		}
 	}
@@ -425,8 +425,8 @@ public class NfaToDfa {
 	//check all the accept states
 	public static boolean checkIfAccept(String[] acceptStates, ArrayList<String> state) {
 		for(int i = 0 ; i < state.size();i++) {
-			for( int j = 0 ; j < acceptStates.length ;j++) {
-				if(acceptStates[j].equals(state.get(i))) {
+			for( int k = 0 ; k < acceptStates.length ;k++) {
+				if(acceptStates[k].equals(state.get(i))) {
 					return true;
 				}
 			}
@@ -445,13 +445,13 @@ public class NfaToDfa {
 	}
 	
 	//get a given states
-	public static ArrayList<String> getInputStates(ArrayList<String> state, Transition[]transitions, String alphabet){
+	public static ArrayList<String> getInput(ArrayList<String> state, Transition[]transitions, String alphabet){
 		ArrayList<String> result = new ArrayList<>();
 		for(int i = 0 ; i < state.size() ; i++) {
-			for(int j = 0 ; j < transitions.length ;j++) {
-				if(transitions[j].alphabet.equals(alphabet) && transitions[j].from.equals(state.get(i))&&!result.contains(transitions[j].to)) {
-					result.add(transitions[j].to);
-					checkAndAdd(result, getEpsilonInDead(transitions[j].to, transitions));
+			for(int k = 0 ; k < transitions.length ;k++) {
+				if(transitions[k].alphabet.equals(alphabet) && transitions[k].from.equals(state.get(i))&&!result.contains(transitions[k].to)) {
+					result.add(transitions[k].to);
+					checkAndAdd(result, getEpsilonInDead(transitions[k].to, transitions));
 				}
 			}
 		}
@@ -462,7 +462,7 @@ public class NfaToDfa {
 	public static ArrayList<Transition> createTrans(ArrayList<String> state,Transition[]trans,String[]alpha) {
 		ArrayList<Transition> result= new ArrayList<>();
 		for(int i = 0 ; i< alpha.length ; i++) {
-			ArrayList<String> toStates = getInputStates(state, trans, alpha[i]);
+			ArrayList<String> toStates = getInput(state, trans, alpha[i]);
 			if(toStates.size() == 0) {
 				toStates.add("Dead");
 			}
@@ -472,7 +472,7 @@ public class NfaToDfa {
 	}
 
 	//check and add the epislon to an arraylist
-	public static ArrayList<String> addEpsilonInArray(String state,Transition[]transitions){
+	public static ArrayList<String> addinEpsilon(String state,Transition[]transitions){
 		ArrayList<String> result = new ArrayList<>();
 		result.add(state);
 		for(int i = 0 ; i<transitions.length;i++) {
@@ -485,9 +485,9 @@ public class NfaToDfa {
 	
 	//get all the epsilon to put it into a dead states 
 	public static ArrayList<String> getEpsilonInDead(String state,Transition[]transitions){
-		ArrayList<String> result = addEpsilonInArray(state, transitions);
+		ArrayList<String> result = addinEpsilon(state, transitions);
 		for(int i = 0 ; i < result.size();i++) {
-			ArrayList<String> newOutcome = addEpsilonInArray(result.get(i), transitions);
+			ArrayList<String> newOutcome = addinEpsilon(result.get(i), transitions);
 			for(int j = 0 ; j<newOutcome.size();j++) {
 				if (!result.contains(newOutcome.get(j))) {
 					result.add(newOutcome.get(j));
@@ -498,7 +498,7 @@ public class NfaToDfa {
 	}
 	
 	// Print all the states 
-	public static String printStat(ArrayList<String>states) {
+	public static String printAllStates(ArrayList<String>states) {
 		String r = "";
 		for(int i = 0 ; i<states.size();i++) {
 			r+=states.get(i);
