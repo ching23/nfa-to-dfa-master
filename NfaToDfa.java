@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Task2 {
+public class NfaToDfa {
 
 	// line variables from text file
 	static String line = null;
