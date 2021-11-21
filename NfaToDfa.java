@@ -1,9 +1,14 @@
+// CS357B Theory of Computation
+// Programming Project - NFA to DFA
+// Given an NFA, create an equivalent DFA
+// @author Caitlin Ching and Lilian Szeto
+
 // import extensions
+import java.util.ArrayList;
+import java.io.IOException;
+import java.util.Collections;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class NfaToDfa {
 
@@ -407,41 +412,14 @@ public class NfaToDfa {
 		}
 		return true;
 	}
-	
-	
-	//check and add the epislon to an arraylist
-	public static ArrayList<String> addEpsilonInArray(String state,Transition[]transitions){
-		ArrayList<String> result = new ArrayList<>();
-		result.add(state);
-		for(int i = 0 ; i<transitions.length;i++) {
-			if(transitions[i].alphabet.equals("$") && transitions[i].from.equals(state)&&!result.contains(transitions[i].to)) {
-				result.add(transitions[i].to);
-			}
-		}
-		return result;
-	}
 
 	//check if the states is in the array if not adds
 	public static void checkAndAdd(ArrayList<String> result, ArrayList<String> arrayToBeAdded) {
 		for(int i = 0; i<arrayToBeAdded.size();i++) {
 			if(!result.contains(arrayToBeAdded.get(i))) {
-				result.add(arrayToBeAdded.get(i));
+					result.add(arrayToBeAdded.get(i));
 			}
 		}
-	}
-	
-	//get all the epsilon to put it into a dead states 
-	public static ArrayList<String> getEpsilonInDead(String state,Transition[]transitions){
-		ArrayList<String> result = addEpsilonInArray(state, transitions);
-		for(int i = 0 ; i < result.size();i++) {
-			ArrayList<String> newOutcome = addEpsilonInArray(result.get(i), transitions);
-			for(int j = 0 ; j<newOutcome.size();j++) {
-				if (!result.contains(newOutcome.get(j))) {
-					result.add(newOutcome.get(j));
-				}
-			}
-		}
-		return result;
 	}
 	
 	//check all the accept states
@@ -451,6 +429,16 @@ public class NfaToDfa {
 				if(acceptStates[j].equals(state.get(i))) {
 					return true;
 				}
+			}
+		}
+		return false;
+	}
+
+	// check if the transition exists
+	private static boolean existTrans(String state, String AL) {
+		for(int i = 0 ; i < tranList.size() ; i++){
+			if(tranList.get(i).from.equals(state) && tranList.get(i).alphabet.equals(AL)){
+				return true;
 			}
 		}
 		return false;
@@ -482,6 +470,32 @@ public class NfaToDfa {
 		}
 		return result;
 	}
+
+	//check and add the epislon to an arraylist
+	public static ArrayList<String> addEpsilonInArray(String state,Transition[]transitions){
+		ArrayList<String> result = new ArrayList<>();
+		result.add(state);
+		for(int i = 0 ; i<transitions.length;i++) {
+			if(transitions[i].alphabet.equals("$") && transitions[i].from.equals(state)&&!result.contains(transitions[i].to)) {
+				result.add(transitions[i].to);
+			}
+		}
+		return result;
+	}
+	
+	//get all the epsilon to put it into a dead states 
+	public static ArrayList<String> getEpsilonInDead(String state,Transition[]transitions){
+		ArrayList<String> result = addEpsilonInArray(state, transitions);
+		for(int i = 0 ; i < result.size();i++) {
+			ArrayList<String> newOutcome = addEpsilonInArray(result.get(i), transitions);
+			for(int j = 0 ; j<newOutcome.size();j++) {
+				if (!result.contains(newOutcome.get(j))) {
+					result.add(newOutcome.get(j));
+				}
+			}
+		}
+		return result;
+	}
 	
 	// Print all the states 
 	public static String printStat(ArrayList<String>states) {
@@ -493,16 +507,6 @@ public class NfaToDfa {
 			}
 		}
 		return r;
-	}
-	
-	// check if the transition exists
-	private static boolean existTrans(String state, String AL) {
-		for(int i = 0 ; i < tranList.size() ; i++){
-			if(tranList.get(i).from.equals(state) && tranList.get(i).alphabet.equals(AL)){
-				return true;
-			}
-		}
-		return false;
 	}
 }
 
