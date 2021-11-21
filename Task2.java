@@ -28,7 +28,7 @@ public class Task2 {
 	// main function 
 	public static void main(String[] args) throws IOException {
 		// allows program to read the file
-		FileReader file = new FileReader("in1.in");
+		FileReader file = new FileReader("testCases.in");
 		BufferedReader buffReader = new BufferedReader(file);	
 		
 		// if states is not empty	
