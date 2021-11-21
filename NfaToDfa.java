@@ -503,7 +503,7 @@ public class NfaToDfa {
 		for(int i = 0 ; i<states.size();i++) {
 			r+=states.get(i);
 			if(i < states.size() - 1) {
-				r+="|";
+				r+="+";
 			}
 		}
 		return r;
