@@ -175,14 +175,14 @@ public class NfaToDfa {
 				}
 			}
 			// print the DFA final states
-			System.out.println("DFA Final State(s): " + DFAfinalState);
+			System.out.println("DFA Accept State(s): " + DFAfinalState);
 			
 			// print the alphabet
 			System.out.println("DFA Alphabet: " + line2);
 			
 			// print the initial states
 			String DFAInitState = printStat(initialDFA);
-			System.out.println("DFA Initial State: " + DFAInitState);
+			System.out.println("DFA Start State: " + DFAInitState);
 			
 			// print all transitions (DFA and NFA)
 			String DFATransitions = "";
